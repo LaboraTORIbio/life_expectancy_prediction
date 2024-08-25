@@ -50,6 +50,7 @@ kiwisolver==1.4.5
 MarkupSafe==2.1.5
 matplotlib==3.9.1
 matplotlib-inline==0.1.7
+missingno==0.5.2
 mistune==3.0.2
 msgpack==1.0.8
 nbclient==0.10.0
@@ -93,6 +94,7 @@ rfc3986-validator==0.1.1
 rpds-py==0.19.1
 scikit-learn==1.5.1
 scipy==1.14.0
+seaborn==0.13.2
 Send2Trash==1.8.3
 setuptools==72.1.0
 six==1.16.0
