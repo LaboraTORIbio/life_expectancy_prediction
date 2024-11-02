@@ -9,7 +9,7 @@ Life expectancy is a key indicator of both public and economic health. Thus, und
 
 In this project, I analyzed the impact of different health-related, socioeconomic and demographic factors on the life expectancy of human populations. I also developed a model to predict the life expectancy of given country based on these key factors.
 
-#### Technologies
+### Technologies
 
 * Programming language: **Python (pandas, numpy, plotly)**
 * Machine learning: **scikit-learn**
@@ -18,7 +18,7 @@ In this project, I analyzed the impact of different health-related, socioeconomi
 * Deployment: **Flask**
 * Version control: **Git and GitHub**
 
-#### Workflow
+### Workflow
 
 1. Exploratory data analysis
 2. Feature selection and data cleaning
@@ -28,7 +28,7 @@ In this project, I analyzed the impact of different health-related, socioeconomi
 
 ## Data
 
-I will use the **Life Expectancy dataset**, collected by the WHO and the United Nations, assembled and available at: https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who. I will train a regression model to predict the life expectancy of a country based on the time series data of the same or different countries. The columns of the dataset are:
+I will use the **Life Expectancy dataset**, collected by the WHO and the United Nations, assembled and available at: https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who. This dataset includes yearly health-related, socioeconomic and demographic data from 183 different countries, for a period of 16 years (2000-2015). Thus, it will be treated as a time-series dataset. The features of the dataset are:
 
 * **Life expectancy:** measured in years
 * **Country**
@@ -41,12 +41,12 @@ I will use the **Life Expectancy dataset**, collected by the WHO and the United 
 * **GDP:** Gross Domestic Product per capita (in USD)
 * **Percentage expenditure:** expenditure on health as a percentage of Gross Domestic Product per capita (%)
 * **Total expenditure:** general government expenditure on health as a percentage of total government expenditure (%)
-* **Income composition:** Human Development Index in terms of income composition of resources (index ranging from 0 to 1)
+* **Income composition of resources:** Human Development Index in terms of income composition of resources (index ranging from 0 to 1)
 * **Hepatitis B:** hepatitis B (HepB) immunization coverage among 1-year-olds (%)
 * **Polio:** polio (Pol3) immunization coverage among 1-year-olds (%)
 * **Diphteria:** Diphtheria tetanus toxoid and pertussis (DTP3) immunization coverage among 1-year-olds (%)
-* **Measles:** number of reported cases per 1000 population
-* **HIV/AIDS:** deaths per 1000 live births HIV/AIDS (0-4 years)
+* **Measles:** number of reported cases of measles per 1000 population
+* **HIV/AIDS:** deaths per 1000 live births attributed to HIV/AIDS (0-4 years)
 * **Thinness 5-9:** prevalence of thinness among children and adolescents for age 5 to 9 (%)
 * **Thinness 10-19:** prevalence of thinness among children and adolescents for age 10 to 19 (%)
 * **BMI:** average Body Mass Index of entire population
