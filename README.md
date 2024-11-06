@@ -2,17 +2,27 @@
 
 ## Index
 
+* [Project Overview](#project-overview)
+    * [Technologies](#technologies)
+    * [Workflow](#workflow)
+    * [Data](#data)
+* [How To Run](#how-to-run)
+    * [Initial setup](#initial-setup)
+    * [Prediction pipeline](#prediction-pipeline)
+    * [Training pipeline](#training-pipeline)
+* [Project Details](#project-details)
+
 
 ## Project Overview
 
 Life expectancy is a key indicator of both public and economic health. Thus, understanding the factors that influence life expectancy and being able to predict it allows for the development of targeted strategies aimed at improving the health of a population. From a human health perspective, accurate life expectancy predictions can help governments and organizations plan for the healthcare needs of their populations, ensuring that resources are allocated efficiently. From a socioeconomic standpoint, life expectancy forecasts can help identify emerging markets, allowing businesses to tailor products and services&mdash;such as healthcare products, insurance, and retirement planning&mdash;to meet future demands effectively.
 
-In this project, I analyzed the impact of different health-related, socioeconomic and demographic factors on the life expectancy of human populations. I also developed a model to predict the life expectancy of given country based on these key factors.
+In this project, I analyzed the impact of different health-related, socioeconomic and demographic factors on the life expectancy of human populations. I also developed a regression model to predict the life expectancy of given country based on these key factors.
 
 ### Technologies:
 
 * Programming language: **Python (pandas, numpy, plotly)**
-* Machine learning: **scikit-learn**
+* Machine Learning: **scikit-learn**
 * Virtual environment: **venv**
 * Containerization: **Docker**
 * Deployment: **Flask**
@@ -33,18 +43,22 @@ I used the **Life Expectancy dataset**, collected by the WHO and the United Nati
 
 ## How To Run
 
-### 1. Clone the project repository:
+This project includes (i) a [**Prediction pipeline**](#prediction-pipeline) to predict the life expectancy of a given country/population and (ii) a [**Training pipeline**](#training-pipeline), in case the model needs to be retrained with new data.
+
+### Initial setup
+
+#### 1. Clone the project repository:
 
 ```bash
 git clone https://github.com/LaboraTORIbio/life_expectancy_prediction.git
 cd life_expectancy_prediction
 ```
 
-### 2. Dowload the data:
+#### 2. Dowload the data:
 
 Download the Life Expectancy dataset as a CSV file and place it in `data/raw/life_expectancy_data.csv`, inside the main project directory.
 
-### 3. Set up the virtual environment:
+#### 3. Set up the virtual environment:
 
 To create and activate a virtual environment, run the following commands from the main project directory:
 
@@ -55,35 +69,54 @@ source .venv/bin/activate
 
 To deactivate the virtual environment, simply run `deactivate`.
 
-### 4. Build and run the Docker container:
+### Prediction pipeline
 
-The following lines will create a Docker image of the project (installing all required dependencies) and run the Flask API (api.py) in a container:
+#### 1. Build and run the Docker container:
+
+The following lines will create a Docker image of the project (installing all required dependencies) and run the Flask API (**api.py**) in a container:
 
 ```bash
 docker build -t life-expectancy .
 docker run -it -p 9696:9696 life-expectancy
 ```
 
-Once the container is running, the API will be accessible at `http://localhost:9696`:
+Once the container is running, the API will be accessible at `http://0.0.0.0:9696`:
 
 ![](imgs/docker_run.png)
 
-### 5. Make predictions:
+#### 2. Make predictions:
 
-Now, you can make predictions running the test_api.py script. This script sends a request to the Flask API:
+Now, you can make predictions running the **test_api.py** script. This script sends a request to the Flask API:
 
 ```bash
-python ./test_apy.py`
+python ./test_apy.py
 ```
-
-You can modify the feature values of your country/population inside the script to get life expectancy predictions for different inputs.
 
 ![](imgs/test_api.png)
 
+You can modify the feature values of your country/population inside the script to get life expectancy predictions for different inputs.
+
+### Training pipeline
+
+The training pipeline can be run from the main project directory, in case the model needs to be retrained with new data:
+
+```bash
+python app/training.py
+```
+
+Alternatively, the input (the Life Expectancy dataset) and output (the exported models) file paths can be specified with the arguments `-i` and `-o`:
+
+```bash
+python app/training.py -i data/raw/dataset.csv -o app/new_models.bin
+```
+
+Please, note that the pipeline expects as input a dataset with at least 15 features, for which column names must be correctly formatted (check required features and format in the [Project Details](#project-details) or within the training.py script).
+
+The training of a HuberRegressor algorithm is hardcoded in the script. If necessary, the performance of other algorithms can be investigated using the functions available in **experiments.py**.
 
 ## Project Details
 
- The WHO's Life Expectancy dataset includes 22 features, of which 19 are health-related, socioeconomic and demographic factors that could influence life expectancy:
+ The WHO's Life Expectancy dataset includes 22 features, including the life expectancy (target variable), the country name, the year of the record (2000-2015) and 19 are health-related, socioeconomic and demographic factors that could influence life expectancy:
 
 * **Life expectancy:** measured in years
 * **Country**
