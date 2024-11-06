@@ -42,12 +42,17 @@ def data_scaling(df, Xstd, Xnorm):
     return df
 
 
-def preprocess(data):
-    df = pd.DataFrame([data])
+def data_preprocessing_workflow(df, encoder, imp, Xstd, Xnorm):
     df_keep = feature_selection(df)
-    encoder, imp, Xstd, Xnorm, *_ = load_models()
     df_encoded = onehot_encode(df_keep, encoder)
     df_imp = data_imputation(df_encoded, imp)
     df_scaled = data_scaling(df_imp, Xstd, Xnorm)
     df_processed = df_scaled.drop('year', axis=1)
+    return df_processed
+
+
+def preprocess(data):
+    df = pd.DataFrame([data])
+    encoder, imp, Xstd, Xnorm, *_ = load_models()
+    df_processed = data_preprocessing_workflow(df, encoder, imp, Xstd, Xnorm)
     return df_processed
