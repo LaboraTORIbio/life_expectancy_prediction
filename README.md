@@ -8,7 +8,7 @@
     * [Data](#data)
 * [How To Run](#how-to-run)
     * [Initial setup](#initial-setup)
-    * [Prediction pipeline](#prediction-pipeline)
+    * [Inference pipeline](#inference-pipeline)
     * [Training pipeline](#training-pipeline)
 * [Project Details](#project-details)
 
@@ -43,7 +43,7 @@ I used the **Life Expectancy dataset**, collected by the WHO and the United Nati
 
 ## How To Run
 
-This project includes (i) a [**Prediction pipeline**](#prediction-pipeline) to predict the life expectancy of a given country/population and (ii) a [**Training pipeline**](#training-pipeline), in case the model needs to be retrained with new data.
+This project includes (i) a [**Training pipeline**](#training-pipeline) and (ii) an [**Inference pipeline**](#inference-pipeline) to predict the life expectancy of a given country/population.
 
 ### Initial setup
 
@@ -56,7 +56,7 @@ cd life_expectancy_prediction
 
 #### 2. Dowload the data:
 
-Download the Life Expectancy dataset as a CSV file and place it in `data/raw/life_expectancy_data.csv`, inside the main project directory.
+Download the [Life Expectancy dataset](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) as a CSV file and place it in `data/raw/life_expectancy_data.csv`, inside the main project directory.
 
 #### 3. Set up the virtual environment:
 
@@ -69,7 +69,25 @@ source .venv/bin/activate
 
 To deactivate the virtual environment, simply run `deactivate`.
 
-### Prediction pipeline
+### Training pipeline
+
+The training pipeline can be run from the main project directory:
+
+```bash
+python app/training.py
+```
+
+Alternatively, the input (the Life Expectancy dataset) and output (the exported models) file paths can be specified with the arguments `-i` and `-o`:
+
+```bash
+python app/training.py -i data/raw/dataset.csv -o app/new_models.bin
+```
+
+Please, note that the pipeline expects as input a dataset with at least 15 curated features, for which column names must be correctly formatted (check required features and format in the [Project Details](#project-details), the [project notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb) or within the training.py script).
+
+The training of a HuberRegressor algorithm is hardcoded in the script. If necessary, the performance of other algorithms can be investigated using the functions available in **experiments.py** or within the [project notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb).
+
+### Inference pipeline
 
 #### 1. Build and run the Docker container:
 
@@ -96,23 +114,6 @@ python ./test_apy.py
 
 You can modify the feature values of your country/population inside the script to get life expectancy predictions for different inputs.
 
-### Training pipeline
-
-The training pipeline can be run from the main project directory, in case the model needs to be retrained with new data:
-
-```bash
-python app/training.py
-```
-
-Alternatively, the input (the Life Expectancy dataset) and output (the exported models) file paths can be specified with the arguments `-i` and `-o`:
-
-```bash
-python app/training.py -i data/raw/dataset.csv -o app/new_models.bin
-```
-
-Please, note that the pipeline expects as input a dataset with at least 15 features, for which column names must be correctly formatted (check required features and format in the [Project Details](#project-details) or within the training.py script).
-
-The training of a HuberRegressor algorithm is hardcoded in the script. If necessary, the performance of other algorithms can be investigated using the functions available in **experiments.py**.
 
 ## Project Details
 
