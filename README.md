@@ -11,8 +11,8 @@
     * [Training pipeline](#training-pipeline)
     * [Inference pipeline](#inference-pipeline)
 * [Project Details](#project-details)
-    * [EDA and data transformation](#eda-and-data-transformation)
-    * [Feature importance](#feature-importance)
+    * [EDA and feature importance](#eda-and-feature-importance)
+    * [Data imputation and transformation](#data-imputation-and-transformation)
     * [Model training](#model-training)
 
 
@@ -33,11 +33,8 @@ In this project, I analyzed the impact of different health-related, socioeconomi
 
 ### Workflow:
 
-1. Exploratory data analysis
-2. Feature selection and data cleaning
-3. Data imputation and transformation
-4. Model training and hyperparameter tuning
-5. Model containerization and deployment
+![](imgs/proj_overview.png)
+
 
 ### Data:
 
@@ -120,16 +117,18 @@ You can modify the feature values of your country/population inside the script t
 
 ## Project Details
 
- A thorough analysis of the dataset is documented in the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb). In this section, I will summarize the relevant findings.
+A thorough analysis of the dataset is documented in the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb). In this section, I will summarize the relevant findings.
  
- The [WHO's Life Expectancy dataset](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) comprises 22 features, including the life expectancy (target variable), the country name, the year of the record (2000-2015) and 19 are health-related, socioeconomic and demographic factors that could influence life expectancy:
+### EDA and feature importance
+
+The [WHO's Life Expectancy dataset](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) comprises 22 features, including the life expectancy (target variable), the country name, the year of the record (2000-2015) and 19 are health-related, socioeconomic and demographic factors that could influence life expectancy:
 
 * **Life expectancy:** measured in years
 * **Country**
-* **Year**
+* **Year:** from 2000 to 2015
 * **Status:** developing or developed country
 * **Population:** number of inhabitants of the country
-* **Adult mortality:** number of deaths of adults per 1000 population, for both sexes
+* **Adult mortality:** number of adult deaths per 1000 population, for both sexes
 * **Infant deaths:** number of infant deaths per 1000 population
 * **Under-five deaths:** number of under-five deaths per 1000 population
 * **GDP:** Gross Domestic Product per capita (in USD)
@@ -147,18 +146,26 @@ You can modify the feature values of your country/population inside the script t
 * **Alcohol:** recorded per capita (15+) consumption (in litres of pure alcohol)
 * **Schooling:** number of years of schooling
 
-### EDA and data transformation
+During exploratory data analysis, I found that several features (`infant_deaths`, `under-five_deaths`, `measles`, `population`, `percentage_expenditure` and `bmi`) included unreliable data (observed as highly unlikely data distributions, see the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb)). Thus, I excluded these columns from further analysis. However, I could incorporate reliable data for `infant_mortality_rate` from another source&mdash;the [UN IGME](https://childmortality.org/) child mortality estimates.
 
-During exploratory data analysis, I found that several features (`infant_deaths`, `under-five_deaths`, `measles`, `population`, `percentage_expenditure` and `bmi`) included unreliable data (observed as highly unlikely data distributions). Thus, I excluded these columns from further analysis. However, I could incorporate reliable data for `infant_mortality_rate` from another source&mdash;the [UN IGME](https://childmortality.org/) child mortality estimates.
-
-Many features included missing values, though most appeared to be missing at random (MAR) due to high correlation of missingness with other features. However, feature `hepatitis_b` seemed to be missing not at random (MNAR), and thus, I eliminated this feature to avoid biasing the dataset after data imputation. Then, I used the MICE method to impute missing values by modeling each feature with missing values as a function of other features. Finally, I transformed the data using standardization or normalization techniques based on the distribution of the original data.
+Many features included missing values, though most appeared to be missing at random (MAR) due to high correlation of missingness with other features. However, feature `hepatitis_b` seemed to be missing not at random (MNAR), and thus, I eliminated this feature to avoid biasing the dataset after data imputation.
 
 This analysis highlights the importance of using high-quality data for modeling. In an ideal scenario, actions should have been taken to trace the source of the faulty or missing data, in order to replace it with reliable information. This way, these features could have been incorporated into the modeling process, possibly increasing model accuracy.
 
-### Feature importance
+Correlation (A) and mutual information (B) analysis reveal, as expected, that adult and infant mortality rates are the best predictors of life expectancy&mdash;the lower the mortality rate, the higher the life expectancy. The next best predictor is the income composition of resources&mdash;a measure of how effectively financial resources are used to support human development&mdash;, followed by the prevalence of thinness in underaged and the number of years of schooling. This suggests that governments should prioritize distributing their resources more efficiently across healthcare (with particular focus on childhood nutrition), education, employment and basic necessities to increase the life expectancy of their populations.
 
-Correlation (A) and mutual information (B) analysis reveal, as expected, that adult and infant mortality rates are the best predictors of life expectancy. The next best predictor is the income composition of resources&mdash;a measure of how effectively financial resources are used to support human development, followed by the prevalence of thinness in underaged and the number of years of schooling. Surprisingly, factors related to disease and immunization, as well as the expenditure on health, did not strongly correlate with life expectancy.
+Surprisingly, factors related to disease and immunization, as well as the expenditure on health, did not correlate as strongly with life expectancy. It is possible that basic health measures such as immunization programs and disease control may be already widely implemented and effective. Once a certain level of disease prevention and healthcare is reached, these factors may contribute less to further improvements in life expectancy compared to socioeconomic and lifestyle factors like income distribution, nutrition or education.
 
 ![](imgs/feature_importance.png)
 
+### Data imputation and transformation
+
+I performed all analyses taking into account the time-series nature of the Life Expectancy dataset. To avoid data leakeage into future data, I splitted the dataset by years into training (years 2000-2012) and test (years 2013-2015), and fitted the data imputer and transformers using the training set. First, I one-hot encoded the categorical `status` feature. Then, I used the MICE method to impute missing values by modeling each feature with missing values as a function of other features. Finally, I scaled the data using standardization or normalization techniques based on the distribution of the original data (see the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb)).
+
 ### Model training
+
+I used a time-aware cross-validation approach (rolling cross-validation) by combining the `TimeSeriesSplit` and `GridSearchCV` classes from scikit-learn. `TimeSeriesSplit` was used for time-based dataset splitting into training and validation sets, while `GridSearchCV` handled cross-validation and hyperparameter tuning for different ML regression models: `SGDRegressor` (a linear regressor that implements stochastic gradient descent and supports incremental learning), `HuberRegressor` (an outlier-robust linear regressor), `DecisionTreeRegressor`, `RandomForestRegressor`, `XGBRegressor` (tree regressor implementing gradient boosting) and `SVR` (support vector regressor).
+
+Although the Random Forest algorithm yielded the best accuracy results, it did so in expense of increasing complexity and training time. Furthermore, when testing the model, it showed signs of overfitting (see the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb)). The HuberRegressor, on the other hand, was simple, fast, did not apparently overfit and was highly accurate, making life expectancy predictions with an average error of &plusmn;2.8 years. Thus, I selected it for model deployment. However, if a higher accuracy is needed, or if frequently updating the model with new data is important, the RandomForest or the SGDRegressor models could be used instead, respectively.
+
+![](imgs/CV.png)
