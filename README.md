@@ -3,9 +3,9 @@
 ## Index
 
 * [Project Overview](#project-overview)
+    * [Data](#data)
     * [Technologies](#technologies)
     * [Workflow](#workflow)
-    * [Data](#data)
 * [How To Run](#how-to-run)
     * [Initial setup](#initial-setup)
     * [Training pipeline](#training-pipeline)
@@ -22,6 +22,10 @@ Life expectancy is a key indicator of both public and economic health. Thus, und
 
 In this project, I analyzed the impact of different health-related, socioeconomic and demographic factors on the life expectancy of human populations. I also developed a regression model to predict the life expectancy of given country based on these key factors.
 
+### Data:
+
+I used the **Life Expectancy dataset**, collected by the WHO and the United Nations, assembled and available at: https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who. This dataset includes yearly health-related, socioeconomic and demographic data, for a period of 16 years (2000-2015), from 183 different countries. Thus, I treated it as a time-series dataset.
+
 ### Technologies:
 
 * Programming language: **Python (pandas, numpy, plotly)**
@@ -36,14 +40,9 @@ In this project, I analyzed the impact of different health-related, socioeconomi
 ![](imgs/proj_overview.png)
 
 
-### Data:
-
-I used the **Life Expectancy dataset**, collected by the WHO and the United Nations, assembled and available at: https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who. This dataset includes yearly health-related, socioeconomic and demographic data, for a period of 16 years (2000-2015), from 183 different countries. Thus, I treated it as a time-series dataset.
-
-
 ## How To Run
 
-This project includes (i) a [**Training pipeline**](#training-pipeline) and (ii) an [**Inference pipeline**](#inference-pipeline) to predict the life expectancy of a given country/population.
+This project includes (i) a [Training pipeline](#training-pipeline) and (ii) an [Inference pipeline](#inference-pipeline) to predict the life expectancy of a given country/population.
 
 ### Initial setup
 
@@ -168,4 +167,4 @@ I used a time-aware cross-validation approach (rolling cross-validation) by comb
 
 Although the Random Forest algorithm yielded the best accuracy results, it did so in expense of increasing complexity and training time. Furthermore, when testing the model, it showed signs of overfitting (see the [Project Notebook](https://github.com/LaboraTORIbio/life_expectancy_prediction/blob/main/project_notebook.ipynb)). The HuberRegressor, on the other hand, was simple, fast, did not apparently overfit and was highly accurate, making life expectancy predictions with an average error of &plusmn;2.8 years. Thus, I selected it for model deployment. However, if a higher accuracy is needed, or if frequently updating the model with new data is important, the RandomForest or the SGDRegressor models could be used instead, respectively.
 
-![](imgs/CV.png)
+<img src="imgs/CV.png" alt="CV" style="width:auto;">
