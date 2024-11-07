@@ -163,7 +163,7 @@ I performed all analyses taking into account the time-series nature of the Life 
 
 ### Model training
 
-I used a time-aware cross-validation approach (rolling cross-validation) by combining the `TimeSeriesSplit` and `GridSearchCV` classes from scikit-learn. `TimeSeriesSplit` was used for time-based dataset splitting into training and validation sets, while `GridSearchCV` handled cross-validation and hyperparameter tuning for different ML regression models: `SGDRegressor` (a linear regressor that implements stochastic gradient descent and supports incremental learning), `HuberRegressor` (an outlier-robust linear regressor), `DecisionTreeRegressor`, `RandomForestRegressor`, `XGBRegressor` (tree regressor implementing gradient boosting) and `SVR` (support vector regressor).
+I used a time-aware cross-validation approach (expanding window cross-validation) by combining the `TimeSeriesSplit` and `GridSearchCV` classes from scikit-learn. `TimeSeriesSplit` was used for time-based dataset splitting into training and validation sets, while `GridSearchCV` handled cross-validation and hyperparameter tuning for different ML regression models: `SGDRegressor` (a linear regressor that implements stochastic gradient descent and supports incremental learning), `HuberRegressor` (an outlier-robust linear regressor), `DecisionTreeRegressor`, `RandomForestRegressor`, `XGBRegressor` (tree regressor implementing gradient boosting) and `SVR` (support vector regressor).
 
 <img src="imgs/CV.png" alt="CV" style="width:auto;">
 
