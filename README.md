@@ -63,10 +63,16 @@ To create and activate a virtual environment, run the following commands from th
 
 ```bash
 python3 -m venv life-expectancy
-source .venv/bin/activate
+source ./life-expectancy/bin/activate
 ```
 
 To deactivate the virtual environment, simply run `deactivate`.
+
+#### 4. Install required dependencies:
+
+```bash
+pip install requirements.txt
+```
 
 ### Training pipeline
 
